@@ -3,22 +3,33 @@ import React from 'react';
 import AuthUserContext from './context';
 import { withFirebase } from '../Firebase';
 
+const INITIAL_STATE = {
+    authUser: null,
+    userProperty: null,
+};
+
 const withAuthentication = Component => {
   class WithAuthentication extends React.Component {
+
     constructor(props) {
       super(props);
-
-      this.state = {
-        authUser: null,
-      };
+      this.state = {...INITIAL_STATE};
     }
 
     componentDidMount() {
       this.listener = this.props.firebase.auth.onAuthStateChanged(
         authUser => {
-          authUser
-            ? this.setState({ authUser })
-            : this.setState({ authUser: null });
+          if(authUser) 
+          {
+            console.log(authUser);
+            this.setState({ authUser: authUser })
+            this.props.firebase.user(authUser.uid).once('value', snapshot => {
+              this.setState({ userProperty: snapshot.val() })
+            });
+          }
+          else {
+            this.setState({...INITIAL_STATE});
+          }
         },
       );
     }
@@ -29,7 +40,7 @@ const withAuthentication = Component => {
 
     render() {
       return (
-        <AuthUserContext.Provider value={this.state.authUser}>
+        <AuthUserContext.Provider value={this.state}>
           <Component {...this.props} />
         </AuthUserContext.Provider>
       );
