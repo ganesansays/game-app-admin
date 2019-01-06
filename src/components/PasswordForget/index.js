@@ -1,14 +1,24 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { compose } from 'recompose';
 
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
+import Button from '@material-ui/core/Button';
+import { styles } from '../../styles'
+import withStyles from '@material-ui/core/styles/withStyles';
+import Avatar from '@material-ui/core/Avatar';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import FormControl from '@material-ui/core/FormControl';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import HowToReg from '@material-ui/icons/HowToRegOutlined';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+
 
 const PasswordForgetPage = () => (
-  <div>
-    <h1>PasswordForget</h1>
-    <PasswordForgetForm />
-  </div>
+  <PasswordForgetForm />
 );
 
 const INITIAL_STATE = {
@@ -47,33 +57,63 @@ class PasswordForgetFormBase extends Component {
 
     const isInvalid = email === '';
 
-    return (
-      <form onSubmit={this.onSubmit}>
-        <input
-          name="email"
-          value={this.state.email}
-          onChange={this.onChange}
-          type="text"
-          placeholder="Email Address"
-        />
-        <button disabled={isInvalid} type="submit">
-          Reset My Password
-        </button>
+    const { classes } = this.props;
 
-        {error && <p>{error.message}</p>}
-      </form>
+    return (
+      <main className={classes.main}>
+          <CssBaseline />
+          <Paper className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <HowToReg />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Forgot password
+              </Typography>
+            <form className={classes.form} onSubmit={this.onSubmit}>
+              <FormControl margin="normal" required fullWidth>
+                <InputLabel htmlFor="email">Email address</InputLabel>
+                <Input id="email" name="email" autoComplete="email" autoFocus value={email}
+                  onChange={this.onChange} />
+              </FormControl>
+              <Button
+                disabled={isInvalid}
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                Reset my password
+                </Button>
+            </form>
+          </Paper>
+        </main>
     );
   }
 }
 
-const PasswordForgetLink = () => (
-  <p>
-    <Link to={ROUTES.PASSWORD_FORGET}>Forgot Password?</Link>
-  </p>
-);
+const PasswordForgetLinkBase = (props) => {
+  const { classes } = props;
+  return (
+    <Button 
+      className={classes.button} 
+      style={{float: "right"}} 
+      color="primary"
+      component={Link}
+      to={ROUTES.PASSWORD_FORGET}
+      >
+      Forgot password?
+    </Button>
+  )
+};
 
 export default PasswordForgetPage;
 
-const PasswordForgetForm = withFirebase(PasswordForgetFormBase);
+const PasswordForgetForm = compose(
+  withFirebase,
+  withStyles(styles)
+)(PasswordForgetFormBase);
+
+const PasswordForgetLink = withStyles(styles)(PasswordForgetLinkBase);
 
 export { PasswordForgetForm, PasswordForgetLink };

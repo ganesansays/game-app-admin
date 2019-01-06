@@ -16,11 +16,13 @@ import AdminPage from '../Admin';
 
 import * as ROUTES from '../../constants/routes';
 import { withAuthentication } from '../Session';
+import MenuAppBar from '../Navigation/MenuAppBar';
 
 const App = () => (
+
   <Router>
     <div>
-      <Navigation />
+      <MenuAppBar />
 
       <hr />
 

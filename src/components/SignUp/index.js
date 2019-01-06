@@ -5,20 +5,29 @@ import { compose } from 'recompose';
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import FormControl from '@material-ui/core/FormControl';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import HowToReg from '@material-ui/icons/HowToRegOutlined';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import { styles } from '../../styles'
+import withStyles from '@material-ui/core/styles/withStyles';
+
 const SignUpPage = () => (
-  <div>
-    <h1>SignUp</h1>
-    <SignUpForm />
-  </div>
+  <SignUpForm />
 );
 
 const INITIAL_STATE = {
-    username: '',
-    email: '',
-    passwordOne: '',
-    passwordTwo: '',
-    error: null,
-  };
+  username: '',
+  email: '',
+  passwordOne: '',
+  passwordTwo: '',
+  error: null,
+};
 
 class SignUpFormBase extends Component {
   constructor(props) {
@@ -57,69 +66,101 @@ class SignUpFormBase extends Component {
 
   render() {
     const {
-        username,
-        email,
-        passwordOne,
-        passwordTwo,
-        error,
-      } = this.state;
-  
-      const isInvalid =
-        passwordOne !== passwordTwo ||
-        passwordOne === '' ||
-        email === '' ||
-        username === '';
+      username,
+      email,
+      passwordOne,
+      passwordTwo,
+      error,
+    } = this.state;
+
+    const isInvalid =
+      passwordOne !== passwordTwo ||
+      passwordOne === '' ||
+      email === '' ||
+      username === '';
+
+    const { classes } = this.props;
 
     return (
-        <form onSubmit={this.onSubmit}>
-        <input
-          name="username"
-          value={username}
-          onChange={this.onChange}
-          type="text"
-          placeholder="Full Name"
-        />
-        <input
-          name="email"
-          value={email}
-          onChange={this.onChange}
-          type="text"
-          placeholder="Email Address"
-        />
-        <input
-          name="passwordOne"
-          value={passwordOne}
-          onChange={this.onChange}
-          type="password"
-          placeholder="Password"
-        />
-        <input
-          name="passwordTwo"
-          value={passwordTwo}
-          onChange={this.onChange}
-          type="password"
-          placeholder="Confirm Password"
-        />
-        <button disabled={isInvalid} type="submit">
-          Sign Up
-        </button>
+      <div>
+        <main className={classes.main}>
+          <CssBaseline />
+          <Paper className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <HowToReg />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign Up
+              </Typography>
+            <form className={classes.form} onSubmit={this.onSubmit}>
+              <FormControl margin="normal" required fullWidth>
+                <InputLabel htmlFor="username">Full name</InputLabel>
+                <Input id="username" name="username" autoComplete="username" autoFocus value={username}
+                  onChange={this.onChange} />
+              </FormControl>
+              <FormControl margin="normal" required fullWidth>
+                <InputLabel htmlFor="email">Email Address</InputLabel>
+                <Input id="email" name="email" type="email" autoComplete="email" value={email}
+                  onChange={this.onChange} />
+              </FormControl>
+              <FormControl margin="normal" required fullWidth>
+                <InputLabel htmlFor="passwordOne">Password</InputLabel>
+                <Input name="passwordOne" type="password" id="passwordOne" autoComplete="current-password" value={passwordOne}
+                  onChange={this.onChange} />
+              </FormControl>
+              <FormControl margin="normal" required fullWidth>
+                <InputLabel htmlFor="passwordTwo">Confirm password</InputLabel>
+                <Input name="passwordTwo" type="password" id="passwordTwo" autoComplete="current-password" value={passwordTwo}
+                  onChange={this.onChange} />
+              </FormControl>
+              <Typography component="h5" color="error"
+                style={{ visibility: !error }}
+              >
+                {error ? error.message : ""}
+              </Typography>
+              <Button
+                disabled={isInvalid}
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                Sign Up
+                </Button>
+            </form>
 
-        {error && <p>{error.message}</p>}
-      </form>
+          </Paper>
+        </main>
+      </div>
     );
   }
 }
 
-const SignUpLink = () => (
-  <p>
-    Don't have an account? <Link to={ROUTES.SIGN_UP}>Sign Up</Link>
-  </p>
-);
+const SignUpLinkBase = (props) => {
+  const { classes } = props;
+  return (
+    <Button
+      type="submit"
+      fullWidth
+      variant="contained"
+      color="secondary"
+      className={classes.submit}
+      component={Link}
+      to={ROUTES.SIGN_UP}
+    >
+      Sign Up
+  </Button>
+  )
+}
 
 const SignUpForm = compose(
-    withRouter, 
-    withFirebase
+  withRouter,
+  withFirebase,
+  withStyles(styles)
 )(SignUpFormBase)
+
+const SignUpLink = withStyles(styles)(SignUpLinkBase);
 
 export default SignUpPage;
 
