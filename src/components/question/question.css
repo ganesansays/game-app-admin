@@ -1,0 +1,76 @@
+.pStyle {
+    padding: 20px;
+    border: solid gray thin;
+}
+
+.boldText {
+    font-weight: bold;
+}
+
+.Heading {
+    padding: 20px;
+    text-decoration: underline;
+    text-align: left;
+    font-weight: bold;
+}
+
+.btn {
+    font-size: 10pt;
+    padding-left: 15px;
+    padding-right: 15px;
+    background-color: whitesmoke;
+    color: black;
+    margin: 3px;
+}
+
+.default {
+    background-color: blue;
+    color: white;
+    font-weight: bold;
+}
+
+.opened {
+    background-color: aqua;
+}
+
+.pStyle {
+    padding: 20px;
+    border: solid gray thin;
+}
+
+.boldText {
+    font-weight: bold;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+.Heading {
+    text-align: left;
+}
+
+.SubHeading {
+    font-weight: bold;
+}
+
+.opened {
+    background-color: aqua;
+}
+
+.question {
+    border: solid 1px black;
+    padding: 5px;
+    margin: 5px;
+}
+
+
+.pStyle {
+    padding: 20px;
+    border: solid gray thin;
+}
+
+.SubHeading {
+    padding: 20px;
+    font-weight: bold;
+}
