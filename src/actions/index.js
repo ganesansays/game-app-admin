@@ -1,33 +1,56 @@
-export const fetchQuestions = (questionStore) => async dispatch => { 
-  questions: questionStore.on("value", snapshot => {
+const BLANK_QUESTION = {answers: Array(4).fill({text: ""})}
+
+export const fetchQuestions = (questionStore) => async dispatch => {
+  questionStore.questions().on("value", snapshot => {
+    let questionsDbData = snapshot.val();
+    const questions = snapshot.val() ? Object.keys(questionsDbData).map(key => ({
+      ...questionsDbData[key],
+      key: key,
+    })) : [];
     dispatch({
       type: 'FETCH_QUESTIONS',
-      questions: snapshot.val()
-    })
-  })
+      questions: questions
+    });
+  });
+};
+
+export const cleanupQuestions = (questionStore) => async dispatch => {
+  questionStore.questions().off();
 }
 
-export const addQuestion = () => ({
-  type: 'ADD_QUESTION'
-})
+export const deleteQuestion = (questionStore, key) => async dispatch => {
+  questionStore.questions().child(key).remove();
+  dispatch({
+    type: 'REFRESH_LIST'
+  });
+}
 
-export const deleteQuestion = (index) => ({
-  type: 'DELETE_QUESTION',
-  index: index
-})
+export const addQuestion = (questionStore) => async dispatch => {
+  questionStore.questions().push().set(BLANK_QUESTION);
+  dispatch({
+    type: 'REFRESH_LIST'
+  });
+}
 
-export const saveQuestion = (index, question) => ({
-  type: 'SAVE_QUESTION',
-  question: question,
-  index: index
-})
+export const saveQuestion = (questionStore, question) => async dispatch => {
+  questionStore.questions().child(question.key).set(question);
+  dispatch({
+    type: 'REFRESH_LIST'
+  });
+}
 
-export const openQuestion = (index) => ({
-  type: 'OPEN_QUESTION',
-  index: index
-})
+export const openQuestion = (questionStore, question) => async dispatch => {
+  question.status = "OPENED"
+  questionStore.questions().child(question.key).set(question);
+  dispatch({
+    type: 'REFRESH_LIST'
+  });
+}
 
-export const closeQuestion = (index) => ({
-  type: 'CLOSE_QUESTION',
-  index: index
-})
+export const closeQuestion = (questionStore, question) => async dispatch => {
+  question.status = "CLOSED"
+  questionStore.questions().child(question.key).set(question);
+  dispatch({
+    type: 'REFRESH_LIST'
+  });
+}

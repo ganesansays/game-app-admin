@@ -1,12 +1,12 @@
 import React from 'react';
-import {Editor, EditorState } from 'draft-js';
+import {Editor, EditorState, ContentState } from 'draft-js';
 import './UniCodeEditor.css';
 
 class UniCodeEditor extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        editorState: EditorState.createEmpty(),
+        editorState: EditorState.createWithContent(ContentState.createFromText(this.props.text ? this.props.text : "")),
         propagate: props.propagate
     };
   }

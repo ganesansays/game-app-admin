@@ -21,7 +21,6 @@ const withAuthentication = Component => {
         authUser => {
           if(authUser) 
           {
-            console.log(authUser);
             this.setState({ authUser: authUser })
             this.props.firebase.user(authUser.uid).once('value', snapshot => {
               this.setState({ userProperty: snapshot.val() })

@@ -9,10 +9,12 @@ import { createStore, applyMiddleware } from 'redux'
 import rootReducer from './reducers'
 import reduxThunk from 'redux-thunk'
 
+let firebase = new Firebase();
+
 const store = createStore(rootReducer, {}, applyMiddleware(reduxThunk));
 
 ReactDOM.render(
-  <FirebaseContext.Provider value={new Firebase()}>
+  <FirebaseContext.Provider value={firebase}>
     <Provider store={store}>
       <App />
     </Provider>

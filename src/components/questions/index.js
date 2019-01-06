@@ -1,20 +1,24 @@
 import React, {useEffect} from 'react';
 import Question from '../question'
 import { connect } from 'react-redux'
-import { addQuestion, fetchQuestions } from '../../actions'
+import { addQuestion, fetchQuestions, cleanupQuestions } from '../../actions'
+import { withFirebase } from '../Firebase'
 
-const Questions = ({questions, addQuestion}) => {
+const Questions = ({questions, addQuestion, fetchQuestions, cleanupQuestions, firebase}) => {
 
   useEffect(() => {
-    fetchQuestions();
+    fetchQuestions(firebase);
+    return function cleanup() {
+      cleanupQuestions(firebase);
+    };
   }, [])
 
   return (
     <div className="App">
-      <button onClick={addQuestion}>Add Question</button>
+      <button onClick={() => addQuestion(firebase)}>Add Question</button>
       {
         questions.map((question, index) => (
-          <Question
+          <Question key={question.key}
             question={question} 
             index = {index}
             />
@@ -29,8 +33,9 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  addQuestion: () => dispatch(addQuestion()),
-  fetchQuestions: (firebase) => dispatch(fetchQuestions(firebase))
+  addQuestion: (firebase) => dispatch(addQuestion(firebase)),
+  fetchQuestions: (firebase) => dispatch(fetchQuestions(firebase)),
+  cleanupQuestions: (firebase) => dispatch(cleanupQuestions(firebase))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Questions);
+export default withFirebase(connect(mapStateToProps, mapDispatchToProps)(Questions));
