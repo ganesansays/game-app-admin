@@ -20,7 +20,9 @@ import { withFirebase } from '../Firebase'
 import {deleteQuestion, saveQuestion, openQuestion, closeQuestion} from '../../actions'
 import { compose } from 'recompose';
 import { useState } from 'react';
-
+import { InputLabel } from '@material-ui/core';
+import Counter from '../Counter'
+import Countdown from 'react-countdown-now'
 
 const styles = theme => ({
   card: {
@@ -55,7 +57,32 @@ const styles = theme => ({
     bottom: theme.spacing.unit * 2,
     right: theme.spacing.unit * 2,
   },
+  counter: {
+    transform: 'rotate(0deg)',
+    marginLeft: 'auto',
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.shortest,
+    }),
+  }
 });
+
+
+// Renderer callback with condition
+const renderer = ({ seconds, milliseconds, completed }) => {
+  if (completed) {
+    // Render a complete state
+    return <span></span>;
+  } else {
+    // Render a countdown
+    return (
+      <div>
+      <span>
+        {seconds}
+      </span>
+      </div>
+    );
+  }
+};
 
 const QuestionCardBase = ({
   question, 
@@ -86,6 +113,7 @@ const QuestionCardBase = ({
     }
 
     return (
+      <div>
       <Card className={classes.card}>
         <CardHeader
           avatar={
@@ -160,8 +188,24 @@ const QuestionCardBase = ({
             <IconButton aria-label="Un lock questions for viewers">
             <LockOpenIcon  onClick={() => openQuestion(firebase, question)}/>
           </IconButton>}
+          {question.status === "OPENED" && 
+          <IconButton
+            className={classes.counter}
+            aria-label="Show more"
+            disabled
+            style={{color: 'red'}}
+          >
+            <Countdown 
+              date={new Date(question.openTime + 40 * 1000)} 
+              renderer={renderer}
+              intervalDelay={0}
+              precision={3}
+              onComplete={() => closeQuestion(firebase, question)}
+            ></Countdown>
+          </IconButton>}
         </CardActions>
       </Card>
+          </div>
     );
   }
 

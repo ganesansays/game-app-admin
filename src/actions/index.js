@@ -66,7 +66,7 @@ export const openQuestion = (questionStore, question) => async dispatch => {
 }
 
 export const closeQuestion = (questionStore, question) => async dispatch => {
-  question.status = "CLOSED"
+  question.status = "NEW"
   if (questionStore && questionStore.auth && questionStore.auth.currentUser && questionStore.auth.currentUser.uid) {
     questionStore.questions(questionStore.auth.currentUser.uid).child(question.key).set(question);
     dispatch({
