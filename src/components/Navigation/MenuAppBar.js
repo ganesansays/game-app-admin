@@ -13,6 +13,8 @@ import Button from '@material-ui/core/Button';
 import * as ROUTES from '../../constants/routes';
 import { Link } from 'react-router-dom';
 import { AuthUserContext } from '../Session';
+import { withFirebase } from '../Firebase';
+import { compose } from 'recompose';
 
 const styles = {
   root: {
@@ -27,7 +29,7 @@ const styles = {
   },
 };
 
-class MenuAppBar extends React.Component {
+class MenuAppBarBase extends React.Component {
   state = {
     auth: true,
     anchorEl: null,
@@ -54,14 +56,12 @@ class MenuAppBar extends React.Component {
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar>
-            <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-              <MenuIcon />
-            </IconButton>
             <Typography variant="h6" color="inherit" className={classes.grow}>
               Game Admin
             </Typography>
-            {auth && (
-              <div>
+            <AuthUserContext.Consumer>
+              {user =>
+              (user && user.authUser && <div>
                 <IconButton
                   aria-owns={open ? 'menu-appbar' : undefined}
                   aria-haspopup="true"
@@ -86,18 +86,19 @@ class MenuAppBar extends React.Component {
                 >
                   <MenuItem onClick={this.handleClose}>Profile</MenuItem>
                   <MenuItem onClick={this.handleClose}>My account</MenuItem>
+                  <MenuItem onClick={this.props.firebase.doSignOut}>Sign out</MenuItem>
                 </Menu>
-
-              </div>
-            )}
-            {
-              !auth && (
-                <Button color="inherit"
-                component={Link}
-                to={ROUTES.SIGN_IN}
-                >Sign in</Button>
-              )
+              </div>)
             }
+            </AuthUserContext.Consumer>
+            <AuthUserContext.Consumer>
+            {user =>
+             (!user.authUser && <Button color="inherit"
+              component={Link}
+              to={ROUTES.SIGN_IN}
+              >Sign in</Button>)
+            }
+            </AuthUserContext.Consumer>
           </Toolbar>
         </AppBar>
       </div>
@@ -105,8 +106,13 @@ class MenuAppBar extends React.Component {
   }
 }
 
-MenuAppBar.propTypes = {
+MenuAppBarBase.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(MenuAppBar);
+const MenuAppBar = compose(
+  withFirebase,
+  withStyles(styles)
+) (MenuAppBarBase)
+
+export default MenuAppBar;

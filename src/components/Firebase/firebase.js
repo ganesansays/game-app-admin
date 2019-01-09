@@ -38,12 +38,12 @@ class Firebase {
   users = () => this.db.ref('users');
 
   // *** Show API ***
-  show = showId => this.db.ref(`shows/${showId}`);
-  shows = () => this.db.ref('shows');
+  show = (uid, showId) => this.db.ref(`shows/${uid}/${showId}`);
+  shows = (uid) => this.db.ref(`shows/${uid}`);
 
   // *** Question API ***
-  question = quid => this.db.ref(`questions/${quid}`);
-  questions = () => this.db.ref('questions');
+  question = (uid, quid) => this.db.ref(`questions/${uid}/${quid}`);
+  questions = uid => this.db.ref(`questions/${uid}`);
 }
 
 export default Firebase;

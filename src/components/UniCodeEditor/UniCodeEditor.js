@@ -13,7 +13,7 @@ class UniCodeEditor extends React.Component {
 
   onChange(editorState) {
     this.setState({editorState});
-    this.state.propagate(editorState.getCurrentContent().getPlainText());
+    if (this.state.propagate) this.state.propagate(editorState.getCurrentContent().getPlainText());
   }
 
   render() {

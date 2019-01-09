@@ -1,8 +1,8 @@
 import React from 'react';
-import { withAuthorization } from '../Session';
+import { withAuthorization, AuthUserContext } from '../Session';
 import Questions from '../questions'
 
-const HomePage = () => (
+const HomePage = (user) => (
   <Questions/>
 );
 
