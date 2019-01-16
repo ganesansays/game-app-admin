@@ -8,6 +8,10 @@ import { withStyles } from '@material-ui/core/styles';
 import { compose } from 'recompose';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add'
+import { Link } from 'react-router-dom';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import ArrowBack from '@material-ui/icons/ArrowBack';
 
 const styles = theme => ({
   fab: {
@@ -21,13 +25,20 @@ const styles = theme => ({
   },
   app: {
     margin: '15px',
+  },
+  breadCrumbs: {
+    textDecoration: 'none',
+    fontWeight: 'bold',
+    color: 'black'
   }
 });
 
-const ShowsBase = ({shows, addShow, fetchShows, cleanupShows, firebase, classes}) => {
+const ShowsBase = ({shows, addShow, fetchShows, cleanupShows, firebase, classes, programKey}) => {
+
+  console.log(programKey);
 
   useEffect(() => {
-    fetchShows(firebase);
+    fetchShows(firebase, programKey);
     return function cleanup() {
       cleanupShows(firebase);
     };
@@ -35,8 +46,17 @@ const ShowsBase = ({shows, addShow, fetchShows, cleanupShows, firebase, classes}
 
   return (
     <div className={classes.app}>
+      <Typography variant="subheading" gutterBottom>
+          <Link to="/program"
+            className={classes.breadCrumbs}
+            >
+            <IconButton aria-label="Back to program">
+              <ArrowBack/>
+            </IconButton>
+          Programs</Link>
+      </Typography>
       <Fab color="primary" aria-label="Add" className={classes.fab}>
-        <AddIcon onClick={() => {addShow(firebase)}} style={{margin: '10px'}}/>
+        <AddIcon onClick={() => {addShow(firebase, programKey)}} style={{margin: '10px'}}/>
       </Fab>
       <div>
         <Grid container spacing={12}>
@@ -44,6 +64,7 @@ const ShowsBase = ({shows, addShow, fetchShows, cleanupShows, firebase, classes}
             shows.map((show, index) => (
               <Grid item xs={4} key={show.key}>
                 <ShowCard 
+                  programKey={programKey}
                   show={show} 
                   index = {index}
                   />
@@ -64,8 +85,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  addShow: (firebase) => {dispatch(addShow(firebase))},
-  fetchShows: (firebase) => dispatch(fetchShows(firebase)),
+  addShow: (firebase, programKey) => {dispatch(addShow(firebase, programKey))},
+  fetchShows: (firebase, programKey) => dispatch(fetchShows(firebase, programKey)),
   cleanupShows: (firebase) => dispatch(cleanupShows(firebase))
 })
 

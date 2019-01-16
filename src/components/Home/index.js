@@ -1,9 +1,8 @@
 import React from 'react';
 import { withAuthorization, AuthUserContext } from '../Session';
-import Questions from '../questions'
 
 const HomePage = (user) => (
-  <Questions/>
+  <div></div>
 );
 
 const condition = user => !!user;

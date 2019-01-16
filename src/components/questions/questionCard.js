@@ -83,6 +83,8 @@ const renderer = ({ seconds, milliseconds, completed }) => {
 };
 
 const QuestionCardBase = ({
+  programKey,
+  showKey,
   question, 
   index, 
   deleteQuestion, 
@@ -112,7 +114,7 @@ const QuestionCardBase = ({
 
     return (
       <div>
-      <Card className={classes.card}>
+        <Card className={classes.card}>
         <CardHeader
           avatar={
             <Avatar aria-label="Recipe" className={classes.avatar}>
@@ -173,18 +175,18 @@ const QuestionCardBase = ({
         </CardContent>
         <CardActions className={classes.actions} disableActionSpacing>
           <IconButton aria-label="Edit question">
-            <SaveIcon onClick={() => saveQuestion(firebase, questionLocalState)}/>
+            <SaveIcon onClick={() => saveQuestion(firebase, programKey, showKey, questionLocalState)}/>
           </IconButton>
           <IconButton aria-label="Delete question">
-            <DeleteIcon onClick={() => deleteQuestion(firebase, question.key)}/>
+            <DeleteIcon onClick={() => deleteQuestion(firebase, programKey, showKey, question.key)}/>
           </IconButton>
           {question.status === "OPENED" && 
           <IconButton aria-label="Lock questions for viewers">
-            <LockIcon onClick={() => closeQuestion(firebase, question)}/>
+            <LockIcon onClick={() => closeQuestion(firebase, programKey, showKey, question)}/>
           </IconButton>}
           {!!question.code && (question.status === "NEW" || !question.status) && 
             <IconButton aria-label="Un lock questions for viewers">
-            <LockOpenIcon  onClick={() => openQuestion(firebase, question)}/>
+            <LockOpenIcon  onClick={() => openQuestion(firebase, programKey, showKey, question)}/>
           </IconButton>}
           {question.status === "OPENED" && 
           <IconButton
@@ -198,12 +200,12 @@ const QuestionCardBase = ({
               renderer={renderer}
               intervalDelay={0}
               precision={3}
-              onComplete={() => closeQuestion(firebase, question)}
+              onComplete={() => closeQuestion(firebase, programKey, showKey, question)}
             ></Countdown>
           </IconButton>}
         </CardActions>
       </Card>
-          </div>
+      </div>
     );
   }
 
@@ -212,10 +214,14 @@ const mapStateToProps = state => ({
 })
   
 const mapDispatchToProps = dispatch => ({
-  deleteQuestion: (firebase, key) => dispatch(deleteQuestion(firebase, key)),
-  saveQuestion: (firebase, question) => dispatch(saveQuestion(firebase, question)),
-  openQuestion: (firebase, question) => dispatch(openQuestion(firebase, question)),
-  closeQuestion: (firebase, question) => dispatch(closeQuestion(firebase, question))
+  deleteQuestion: (firebase, programKey, showKey, key) => 
+    dispatch(deleteQuestion(firebase, programKey, showKey, key)),
+  saveQuestion: (firebase, programKey, showKey, question) => 
+    dispatch(saveQuestion(firebase, programKey, showKey, question)),
+  openQuestion: (firebase, programKey, showKey, question) => 
+    dispatch(openQuestion(firebase, programKey, showKey, question)),
+  closeQuestion: (firebase, programKey, showKey, question) => 
+    dispatch(closeQuestion(firebase, programKey, showKey, question))
 })
 
 const QuestionCard = compose(

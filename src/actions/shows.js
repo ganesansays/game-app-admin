@@ -1,8 +1,8 @@
 import Firebase from 'firebase';
 
-export const fetchShows = (firestore) => async dispatch => {
+export const fetchShows = (firestore, programKey) => async dispatch => {
   if (firestore && firestore.auth && firestore.auth.currentUser && firestore.auth.currentUser.uid) {
-    firestore.shows(firestore.auth.currentUser.uid).on("value", snapshot => {
+    firestore.shows(firestore.auth.currentUser.uid, programKey).on("value", snapshot => {
       let showsDbData = snapshot.val();
       const shows = snapshot.val() ? Object.keys(showsDbData).map(key => ({
         ...showsDbData[key],
@@ -22,28 +22,28 @@ export const cleanupShows = (firestore) => async dispatch => {
   firestore.shows().off();
 }
 
-export const deleteShow = (firestore, key) => async dispatch => {
+export const deleteShow = (firestore, programKey, key) => async dispatch => {
   console.log('delete show...' + key);
   if (firestore && firestore.auth && firestore.auth.currentUser && firestore.auth.currentUser.uid) {
-    firestore.shows(firestore.auth.currentUser.uid).child(key).remove();
+    firestore.shows(firestore.auth.currentUser.uid, programKey).child(key).remove();
     dispatch({
       type: 'REFRESH_LIST'
     });
   }
 }
 
-export const addShow = (firestore) => async dispatch => {
+export const addShow = (firestore, programKey) => async dispatch => {
   if (firestore && firestore.auth && firestore.auth.currentUser && firestore.auth.currentUser.uid) {
-    firestore.shows(firestore.auth.currentUser.uid).push().set({title: ""});
+    firestore.shows(firestore.auth.currentUser.uid, programKey).push().set({title: ""});
     dispatch({
       type: 'REFRESH_LIST'
     });
   }
 }
 
-export const saveShow = (firestore, show) => async dispatch => {
+export const saveShow = (firestore, programKey, show) => async dispatch => {
   if (firestore && firestore.auth && firestore.auth.currentUser && firestore.auth.currentUser.uid) {
-    firestore.shows(firestore.auth.currentUser.uid).child(show.key).set(show);
+    firestore.shows(firestore.auth.currentUser.uid, programKey).child(show.key).set(show);
     dispatch({
       type: 'REFRESH_LIST'
     });

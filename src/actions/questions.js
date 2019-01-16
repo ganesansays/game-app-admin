@@ -2,9 +2,9 @@ import Firebase from 'firebase';
 
 const BLANK_QUESTION = { answers: Array(4).fill({ text: "" }) }
 
-export const fetchQuestions = (questionStore) => async dispatch => {
+export const fetchQuestions = (questionStore, programKey, showKey) => async dispatch => {
   if (questionStore && questionStore.auth && questionStore.auth.currentUser && questionStore.auth.currentUser.uid) {
-    questionStore.questions(questionStore.auth.currentUser.uid).on("value", snapshot => {
+    questionStore.questions(questionStore.auth.currentUser.uid, programKey, showKey).on("value", snapshot => {
       let questionsDbData = snapshot.val();
       const questions = snapshot.val() ? Object.keys(questionsDbData).map(key => ({
         ...questionsDbData[key],
@@ -18,16 +18,15 @@ export const fetchQuestions = (questionStore) => async dispatch => {
   } else {
     console.log('User is either not authenticated or there is something wrong with the authentiation!');
   }
-
 };
 
 export const cleanupQuestions = (questionStore) => async dispatch => {
   questionStore.questions().off();
 }
 
-export const deleteQuestion = (questionStore, key) => async dispatch => {
+export const deleteQuestion = (questionStore, programKey, showKey, key) => async dispatch => {
   if (questionStore && questionStore.auth && questionStore.auth.currentUser && questionStore.auth.currentUser.uid) {
-    questionStore.questions(questionStore.auth.currentUser.uid).child(key).remove();
+    questionStore.questions(questionStore.auth.currentUser.uid, programKey, showKey).child(key).remove();
     dispatch({
       type: 'REFRESH_LIST'
     });
@@ -36,39 +35,39 @@ export const deleteQuestion = (questionStore, key) => async dispatch => {
 
 const getRandomCode = () => (Math.random().toString(36).substr(2, 6)).toUpperCase();
 
-export const addQuestion = (questionStore) => async dispatch => {
+export const addQuestion = (questionStore, programKey, showKey) => async dispatch => {
   if (questionStore && questionStore.auth && questionStore.auth.currentUser && questionStore.auth.currentUser.uid) {
-    questionStore.questions(questionStore.auth.currentUser.uid).push().set({ ...BLANK_QUESTION, code: getRandomCode() });
+    questionStore.questions(questionStore.auth.currentUser.uid, programKey, showKey).push().set({ ...BLANK_QUESTION, code: getRandomCode() });
     dispatch({
       type: 'REFRESH_LIST'
     });
   }
 }
 
-export const saveQuestion = (questionStore, question) => async dispatch => {
+export const saveQuestion = (questionStore, programKey, showKey, question) => async dispatch => {
   if (questionStore && questionStore.auth && questionStore.auth.currentUser && questionStore.auth.currentUser.uid) {
-    questionStore.questions(questionStore.auth.currentUser.uid).child(question.key).set(question);
+    questionStore.questions(questionStore.auth.currentUser.uid, programKey, showKey).child(question.key).set(question);
     dispatch({
       type: 'REFRESH_LIST'
     });
   }
 }
 
-export const openQuestion = (questionStore, question) => async dispatch => {
+export const openQuestion = (questionStore, programKey, showKey, question) => async dispatch => {
   question.status = "OPENED"
   question.openTime =  Firebase.database.ServerValue.TIMESTAMP;
   if (questionStore && questionStore.auth && questionStore.auth.currentUser && questionStore.auth.currentUser.uid) {
-    questionStore.questions(questionStore.auth.currentUser.uid).child(question.key).set(question);
+    questionStore.questions(questionStore.auth.currentUser.uid, programKey, showKey).child(question.key).set(question);
     dispatch({
       type: 'REFRESH_LIST'
     });
   }
 }
 
-export const closeQuestion = (questionStore, question) => async dispatch => {
+export const closeQuestion = (questionStore, programKey, showKey, question) => async dispatch => {
   question.status = "NEW"
   if (questionStore && questionStore.auth && questionStore.auth.currentUser && questionStore.auth.currentUser.uid) {
-    questionStore.questions(questionStore.auth.currentUser.uid).child(question.key).set(question);
+    questionStore.questions(questionStore.auth.currentUser.uid, programKey, showKey).child(question.key).set(question);
     dispatch({
       type: 'REFRESH_LIST'
     });

@@ -1,9 +1,7 @@
 const programs = (state = [], action) => {
   switch (action.type) {
-    case 'FETCH_PROGRAMS':
+    case 'GET_PROGRAMS_SUCCESS':
       return action.programs;
-      case 'REFRESH_LIST':
-      return state;
     default:
       return state;
   }

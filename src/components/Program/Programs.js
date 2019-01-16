@@ -8,6 +8,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { compose } from 'recompose';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add'
+import { createLoadingSelector } from '../../reducers/selectors';
 
 const styles = theme => ({
   fab: {
@@ -24,7 +25,16 @@ const styles = theme => ({
   }
 });
 
-const ProgramsBase = ({programs, addProgram, fetchPrograms, cleanupPrograms, firebase, classes}) => {
+const loadingSelector = createLoadingSelector(['GET_PROGRAMS']);
+
+const ProgramsBase = ({
+  programs, 
+  isFetching, 
+  addProgram, 
+  fetchPrograms, 
+  cleanupPrograms, 
+  firebase, 
+  classes}) => {
 
   useEffect(() => {
     fetchPrograms(firebase);
@@ -32,6 +42,8 @@ const ProgramsBase = ({programs, addProgram, fetchPrograms, cleanupPrograms, fir
       cleanupPrograms(firebase);
     };
   }, [])
+
+  console.log(isFetching);
 
   return (
     <div className={classes.app}>
@@ -60,7 +72,8 @@ const ProgramsBase = ({programs, addProgram, fetchPrograms, cleanupPrograms, fir
 }
 
 const mapStateToProps = state => ({
-  programs: state.programs
+  programs: state.programs,
+  isFetching: loadingSelector(state)
 })
 
 const mapDispatchToProps = dispatch => ({

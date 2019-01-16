@@ -13,6 +13,8 @@ import { connect } from 'react-redux'
 import { withFirebase } from '../Firebase'
 import { deleteProgram, saveProgram } from '../../actions'
 import { compose } from 'recompose';
+import { Link } from 'react-router-dom';
+import ArrowForward from '@material-ui/icons/ArrowForward';
 
 const styles = theme => ({
   card: {
@@ -49,22 +51,17 @@ const styles = theme => ({
     right: theme.spacing.unit * 2,
   },
   counter: {
-    transform: 'rotate(0deg)',
     marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest,
-    }),
   }
 });
 
 
-const ProgramCardBase = ({
-  program, 
-  index, 
-  firebase,
-  deleteProgram, 
-  saveProgram,
-  classes}) => {
+const ProgramCardBase = props => {
+
+  const program = props.program;
+  const index = props.index;
+  const classes = props.classes;
+  const firebase = props.firebase;
 
   const handleProgramTitle = (event) => {
     program.title = event.target.value;
@@ -92,15 +89,21 @@ const ProgramCardBase = ({
             />
           }
         />
-        <CardContent className={classes.cardContent} fullWidth>
-          
-        </CardContent>
+        <Link to={`/show/${program.key}`}>
+          <CardContent className={classes.cardContent} fullWidth>
+          </CardContent>
+        </Link>
         <CardActions className={classes.actions} disableActionSpacing>
           <IconButton aria-label="Save Program">
-            <SaveIcon onClick={() => {saveProgram(firebase, program)}}/>
+            <SaveIcon onClick={() => props.saveProgram(firebase, program)}/>
           </IconButton>
           <IconButton aria-label="Delete Program">
-            <DeleteIcon onClick={() => {deleteProgram(firebase, program.key)}} />
+            <DeleteIcon onClick={() => props.deleteProgram(firebase, program.key)} />
+          </IconButton>
+          <IconButton aria-label="Expand shows" className={classes.counter}>
+            <Link to={`/show/${program.key}`}>
+              <ArrowForward/>
+            </Link>
           </IconButton>
         </CardActions>
       </Card>

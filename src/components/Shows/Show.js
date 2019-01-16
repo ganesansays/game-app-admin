@@ -13,6 +13,8 @@ import { connect } from 'react-redux'
 import { withFirebase } from '../Firebase'
 import { deleteShow, saveShow } from '../../actions'
 import { compose } from 'recompose';
+import { Link } from 'react-router-dom';
+import ArrowForward from '@material-ui/icons/ArrowForward';
 
 const styles = theme => ({
   card: {
@@ -64,13 +66,17 @@ const ShowCardBase = ({
   firebase,
   deleteShow, 
   saveShow,
-  classes}) => {
+  classes, 
+  programKey}) => {
 
   const handleShowTitle = (event) => {
     show.title = event.target.value;
   }
 
+  console.log(programKey);
+
   return (
+    
       <Card className={classes.card}>
         <CardHeader
           avatar={
@@ -92,15 +98,21 @@ const ShowCardBase = ({
             />
           }
         />
-        <CardContent className={classes.cardContent} fullWidth>
-          
-        </CardContent>
+        <Link to={`/question/${programKey}/${show.key}`}>
+          <CardContent className={classes.cardContent} fullWidth>
+          </CardContent>
+        </Link>
         <CardActions className={classes.actions} disableActionSpacing>
           <IconButton aria-label="Save Program">
-            <SaveIcon onClick={() => {saveShow(firebase, show)}}/>
+            <SaveIcon onClick={() => {saveShow(firebase, programKey, show)}}/>
           </IconButton>
           <IconButton aria-label="Delete Program">
-            <DeleteIcon onClick={() => {deleteShow(firebase, show.key)}} />
+            <DeleteIcon onClick={() => {deleteShow(firebase, programKey, show.key)}} />
+          </IconButton>
+          <IconButton aria-label="Expand questions" className={classes.counter}>
+            <Link to={`/question/${programKey}/${show.key}`}>
+              <ArrowForward/>
+            </Link>
           </IconButton>
         </CardActions>
       </Card>
@@ -108,8 +120,8 @@ const ShowCardBase = ({
   }
 
 const mapDispatchToProps = dispatch => ({
-  deleteShow: (firebase, key) => dispatch(deleteShow(firebase, key)),
-  saveShow: (firebase, show) => dispatch(saveShow(firebase, show)),
+  deleteShow: (firebase, programKey, key) => dispatch(deleteShow(firebase, programKey, key)),
+  saveShow: (firebase, programKey, show) => dispatch(saveShow(firebase, programKey, show)),
 })
 
 const ShowCard = compose(

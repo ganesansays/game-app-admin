@@ -13,6 +13,7 @@ import AccountPage from '../Account';
 import AdminPage from '../Admin';
 import ProgramPage from '../Program'
 import ShowPage from '../Shows'
+import QuestionPage from '../Questions'
 
 import * as ROUTES from '../../constants/routes';
 import { withAuthentication } from '../Session';
@@ -30,11 +31,11 @@ const App = () => (
         path={ROUTES.PASSWORD_FORGET}
         component={PasswordForgetPage}
       />
-      <Route path={ROUTES.HOME} component={HomePage} />
-      <Route path={ROUTES.ACCOUNT} component={AccountPage} />
+      <Route path={`/question/:programKey/:showKey`} component={QuestionPage} />
       <Route path={ROUTES.ADMIN} component={AdminPage} />
+      <Route path={ROUTES.ACCOUNT} component={AccountPage} />
       <Route path={ROUTES.PROGRAM} component={ProgramPage} />
-      <Route path={ROUTES.SHOW} component={ShowPage} />
+      <Route path={`/show/:programKey`} component={ShowPage} />
     </div>
   </Router>
 );

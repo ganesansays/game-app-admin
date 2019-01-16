@@ -6,4 +6,5 @@ export const ACCOUNT = '/account';
 export const ADMIN = '/admin';
 export const PROGRAM = '/program';
 export const SHOW = '/show';
+export const QUESTION = '/question';
 export const PASSWORD_FORGET = '/pw-forget';

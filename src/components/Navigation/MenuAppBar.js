@@ -84,8 +84,6 @@ class MenuAppBarBase extends React.Component {
                   open={open}
                   onClose={this.handleClose}
                 >
-                  <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                  <MenuItem onClick={this.handleClose}>My account</MenuItem>
                   <MenuItem onClick={this.props.firebase.doSignOut}>Sign out</MenuItem>
                 </Menu>
               </div>)
