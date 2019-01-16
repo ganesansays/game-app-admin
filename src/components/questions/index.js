@@ -25,7 +25,7 @@ const styles = theme => ({
   }
 });
 
-const QuestionsBase = ({questions, addQuestion, fetchQuestions, cleanupQuestions, firebase, classes, uid}) => {
+const QuestionsBase = ({questions, addQuestion, fetchQuestions, cleanupQuestions, firebase, classes}) => {
 
   useEffect(() => {
     fetchQuestions(firebase);

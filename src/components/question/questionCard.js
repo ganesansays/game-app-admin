@@ -20,8 +20,6 @@ import { withFirebase } from '../Firebase'
 import {deleteQuestion, saveQuestion, openQuestion, closeQuestion} from '../../actions'
 import { compose } from 'recompose';
 import { useState } from 'react';
-import { InputLabel } from '@material-ui/core';
-import Counter from '../Counter'
 import Countdown from 'react-countdown-now'
 
 const styles = theme => ({
@@ -209,15 +207,15 @@ const QuestionCardBase = ({
     );
   }
 
-  const mapStateToProps = state => ({
-    questions: state.questions
+const mapStateToProps = state => ({
+  questions: state.questions
 })
   
 const mapDispatchToProps = dispatch => ({
-    deleteQuestion: (firebase, key) => dispatch(deleteQuestion(firebase, key)),
-    saveQuestion: (firebase, question) => dispatch(saveQuestion(firebase, question)),
-    openQuestion: (firebase, question) => dispatch(openQuestion(firebase, question)),
-    closeQuestion: (firebase, question) => dispatch(closeQuestion(firebase, question))
+  deleteQuestion: (firebase, key) => dispatch(deleteQuestion(firebase, key)),
+  saveQuestion: (firebase, question) => dispatch(saveQuestion(firebase, question)),
+  openQuestion: (firebase, question) => dispatch(openQuestion(firebase, question)),
+  closeQuestion: (firebase, question) => dispatch(closeQuestion(firebase, question))
 })
 
 const QuestionCard = compose(
