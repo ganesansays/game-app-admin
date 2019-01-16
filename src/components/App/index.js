@@ -24,7 +24,7 @@ const App = () => (
   <Router>
     <div>
       <MenuAppBar />
-      <Route exact path={ROUTES.LANDING} component={HomePage} />
+      <Route exact path={ROUTES.LANDING} component={ProgramPage} />
       <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
       <Route path={ROUTES.SIGN_IN} component={SignInPage} />
       <Route

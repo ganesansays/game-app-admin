@@ -11,6 +11,18 @@
         ".read": "auth.uid === $user",
         ".write": "auth.uid === $user"
       }
+    },
+    "programs": {
+      "$user": {
+        ".read": "auth.uid === $user",
+        ".write": "auth.uid === $user"
+      }
+    },
+    "shows": {
+      "$user": {
+        ".read": "auth.uid === $user",
+        ".write": "auth.uid === $user"
+      }
     }
   }
 }
